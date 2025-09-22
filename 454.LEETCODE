@@ -1,0 +1,28 @@
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+class Solution {
+public:
+    int fourSumCount(vector<int>& nums1, vector<int>& nums2, 
+                     vector<int>& nums3, vector<int>& nums4) {
+        unordered_map<int, int> sumAB;
+        int count = 0;
+
+        // Store all sums of nums1[i] + nums2[j]
+        for (const int &a : nums1) {
+            for (const int &b : nums2) {
+                sumAB[a + b]++;
+            }
+        }
+
+        // For each pair in nums3 and nums4, check complement
+        for (const int &c : nums3) {
+            for (const int &d : nums4) {
+                count += sumAB[-(c + d)];
+            }
+        }
+
+        return count;
+    }
+};

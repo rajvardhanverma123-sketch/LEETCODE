@@ -1,61 +1,21 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <limits.h>
+class Solution {
+public:
+    bool checkSubarraySum(vector<int>& nums, int k) {
+        unordered_map<int, int> remainderIndex;
+        remainderIndex[0] = -1;  // to handle subarray starting at index 0
+        int sum = 0;
 
-#define TABLE_SIZE 10000
+        for (int i = 0; i < nums.size(); i++) {
+            sum += nums[i];
+            if (k != 0) sum %= k;
 
-typedef struct Node {
-    int key;
-    int value;
-    struct Node* next;
-} Node;
-
-Node* hashTable[TABLE_SIZE];
-
-int hash(int key) {
-    if (key < 0) key = -key;
-    return key % TABLE_SIZE;
-}
-
-void insert(int key, int value) {
-    int idx = hash(key);
-    Node* curr = hashTable[idx];
-    while (curr) {
-        if (curr->key == key) return;
-        curr = curr->next;
-    }
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    newNode->key = key;
-    newNode->value = value;
-    newNode->next = hashTable[idx];
-    hashTable[idx] = newNode;
-}
-
-int find(int key) {
-    int idx = hash(key);
-    Node* curr = hashTable[idx];
-    while (curr) {
-        if (curr->key == key) return curr->value;
-        curr = curr->next;
-    }
-    return INT_MIN;
-}
-
-bool checkSubarraySum(int* nums, int numsSize, int k) {
-    if (numsSize < 2) return false;
-    for (int i = 0; i < TABLE_SIZE; i++) hashTable[i] = NULL;
-    insert(0, -1);
-    int sum = 0;
-    for (int i = 0; i < numsSize; i++) {
-        sum += nums[i];
-        if (k != 0) sum %= k;
-        int prevIndex = find(sum);
-        if (prevIndex != INT_MIN) {
-            if (i - prevIndex > 1) return true;
-        } else {
-            insert(sum, i);
+            if (remainderIndex.count(sum)) {
+                if (i - remainderIndex[sum] > 1)
+                    return true;
+            } else {
+                remainderIndex[sum] = i;
+            }
         }
+        return false;
     }
-    return false;
-}
+};

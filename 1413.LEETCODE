@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int minStartValue(vector<int>& nums) {
+        int sum = 0;
+        int minSum = 0;
+        
+        for (int num : nums) {
+            sum += num;
+            minSum = min(minSum, sum);  // track the lowest point of prefix sum
+        }
+        
+        // If minSum >= 0 → startValue = 1; else 1 - minSum
+        return 1 - minSum;
+    }
+};

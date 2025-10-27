@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int partitionDisjoint(vector<int>& nums) {
+        int n = nums.size();
+        int leftMax = nums[0];     // max value in the current left partition
+        int currMax = nums[0];     // max value seen so far
+        int partitionIdx = 0;      // end index of left partition
+        
+        for (int i = 1; i < n; ++i) {
+            if (nums[i] < leftMax) {
+                // must extend left partition to include this element
+                partitionIdx = i;
+                leftMax = currMax;  // update left max to the max seen so far
+            } else {
+                currMax = max(currMax, nums[i]);
+            }
+        }
+        
+        return partitionIdx + 1;   // length of the left partition
+    }
+};
